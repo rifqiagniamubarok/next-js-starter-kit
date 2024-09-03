@@ -26,10 +26,10 @@ export const authOptions = {
         }
       },
     }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
+    // GithubProvider({
+    //   clientId: process.env.GITHUB_ID,
+    //   clientSecret: process.env.GITHUB_SECRET,
+    // }),
   ],
   callbacks: {
     async jwt({ token, user, account }) {

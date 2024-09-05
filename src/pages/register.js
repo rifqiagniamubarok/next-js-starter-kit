@@ -5,6 +5,11 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from '@tanstack/react-form';
 import Link from 'next/link';
 
+const ErrorMsg = ({ error }) => {
+  const msg = error.response.data.errors[0].message;
+  return <div className="text-sm text-red-600 border-2 border-red-500 p-2 rounded-md text-center bg-red-50">{msg}!</div>;
+};
+
 const Register = () => {
   const form = useForm({
     defaultValues: {
@@ -46,6 +51,7 @@ const Register = () => {
           className=" space-y-4 min-w-80 "
         >
           <p className="text-xl">Register</p>
+          {mutation.isError && <ErrorMsg error={mutation.error} />}
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
             <form.Field
               name="username"
@@ -106,7 +112,7 @@ const Register = () => {
               }}
             />
           </div>
-          {mutation.isError && <p className="text-red">{JSON.stringify(mutation.error)}</p>}
+
           <div className="space-x-4">
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}

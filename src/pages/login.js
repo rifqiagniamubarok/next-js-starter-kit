@@ -10,21 +10,21 @@ const Login = () => {
   const router = useRouter();
   const form = useForm({
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
     onSubmit: ({ value }) => {
       mutation.mutateAsync({
-        username: value.username,
+        email: value.email,
         password: value.password,
       });
     },
   });
 
-  const handleFetch = async ({ username, password }) => {
+  const handleFetch = async ({ email, password }) => {
     const { ok, error } = await signIn('credentials', {
       redirect: false,
-      username,
+      email,
       password,
     });
 
@@ -62,13 +62,13 @@ const Login = () => {
           <p className="text-xl">Login</p>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
             <form.Field
-              name="username"
+              name="email"
               validators={{
-                onChange: ({ value }) => (value.length < 5 ? 'Username must be at least 5 characters' : undefined),
+                onChange: ({ value }) => (value.length < 5 ? 'Email must be at least 5 characters' : undefined),
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
                   await new Promise((resolve) => setTimeout(resolve, 1000));
-                  return value.includes('error') && 'No "error" allowed in username';
+                  return value.includes('error') && 'No "error" allowed in email';
                 },
               }}
               children={(field) => {

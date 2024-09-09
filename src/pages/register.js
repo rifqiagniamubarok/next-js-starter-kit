@@ -6,21 +6,23 @@ import { useForm } from '@tanstack/react-form';
 import Link from 'next/link';
 
 const ErrorMsg = ({ error }) => {
-  const msg = error.response.data.errors[0].message;
+  console.log({ error });
+  let msg = 'Opps, something error';
+  if (error?.response?.data?.errors[0]?.message) {
+    msg = error.response.data.errors[0].message;
+  }
   return <div className="text-sm text-red-600 border-2 border-red-500 p-2 rounded-md text-center bg-red-50">{msg}!</div>;
 };
 
 const Register = () => {
   const form = useForm({
     defaultValues: {
-      username: '',
+      name: '',
+      email: '',
       password: '',
     },
     onSubmit: async ({ value }) => {
-      mutation.mutate({
-        username: value.username,
-        password: value.password,
-      });
+      mutation.mutate(value);
     },
   });
 
@@ -33,9 +35,6 @@ const Register = () => {
     onSuccess: (data, variables, context) => {
       console.log({ data, variables, context });
       router.push('/login');
-    },
-    onError: (error) => {
-      console.log({ error });
     },
   });
 
@@ -54,13 +53,43 @@ const Register = () => {
           {mutation.isError && <ErrorMsg error={mutation.error} />}
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
             <form.Field
-              name="username"
+              name="name"
               validators={{
-                onChange: ({ value }) => (value.length < 5 ? 'Username must be at least 5 characters' : undefined),
-                onChangeAsyncDebounceMs: 500,
+                onChange: ({ value }) => (value.length < 5 ? 'Name must be at least 5 characters' : undefined),
+                onChangeAsyncDebounceMs: 10,
                 onChangeAsync: async ({ value }) => {
                   await new Promise((resolve) => setTimeout(resolve, 1000));
-                  return value.includes('error') && 'No "error" allowed in first name';
+                  return value.includes('error') && 'No "error" allowed in name';
+                },
+              }}
+              children={(field) => {
+                return (
+                  <>
+                    <Input
+                      id={field.name}
+                      type="text"
+                      name={field.name}
+                      label={field.name}
+                      isInvalid={field.state.meta.errors.length && field.state.meta.isTouched}
+                      errorMessage={field.state.meta.errors.join(',')}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      required
+                    />
+                  </>
+                );
+              }}
+            />
+          </div>
+          <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+            <form.Field
+              name="email"
+              validators={{
+                onChange: ({ value }) => (value.length < 5 ? 'Email must be at least 5 characters' : undefined),
+                onChangeAsyncDebounceMs: 10,
+                onChangeAsync: async ({ value }) => {
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
+                  return value.includes('error') && 'No "error" allowed in email';
                 },
               }}
               children={(field) => {
@@ -90,7 +119,7 @@ const Register = () => {
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
                   await new Promise((resolve) => setTimeout(resolve, 1000));
-                  return value.includes('error') && 'No "error" allowed in first name';
+                  return value.includes('error') && 'No "error" allowed in password';
                 },
               }}
               children={(field) => {

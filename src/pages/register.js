@@ -6,7 +6,6 @@ import { useForm } from '@tanstack/react-form';
 import Link from 'next/link';
 
 const ErrorMsg = ({ error }) => {
-  console.log({ error });
   let msg = 'Opps, something error';
   if (error?.response?.data?.errors[0]?.message) {
     msg = error.response.data.errors[0].message;
@@ -33,7 +32,6 @@ const Register = () => {
       return axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, payload);
     },
     onSuccess: (data, variables, context) => {
-      console.log({ data, variables, context });
       router.push('/login');
     },
   });

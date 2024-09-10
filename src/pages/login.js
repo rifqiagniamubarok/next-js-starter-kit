@@ -43,7 +43,7 @@ const Login = () => {
     },
     onError: (error, variables, context) => {
       if (error) {
-        console.log({ error, variables, context });
+        console.error({ error, variables, context });
       }
     },
   });

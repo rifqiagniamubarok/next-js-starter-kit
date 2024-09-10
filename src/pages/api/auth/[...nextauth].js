@@ -35,7 +35,6 @@ export const authOptions = {
       return baseUrl;
     },
     async session({ session, token }) {
-      console.log({ session, token });
       return { ...session, token: token.sub };
     },
   },
